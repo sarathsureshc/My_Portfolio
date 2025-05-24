@@ -7,7 +7,7 @@ import { AuthProvider } from './context/AuthContext';
 import { PortfolioProvider } from './context/PortfolioContext';
 
 import Home from './pages/Home';
-import About from './pages/About';
+// import About from './pages/About';
 import Projects from './pages/Projects';
 import Experience from './pages/Experience';
 import Skills from './pages/Skills';
@@ -29,7 +29,7 @@ function App() {
           <div className="App">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
+              {/* <Route path="/about" element={<About />} /> */}
               <Route path="/projects" element={<Projects />} />
               <Route path="/experience" element={<Experience />} />
               <Route path="/skills" element={<Skills />} />
