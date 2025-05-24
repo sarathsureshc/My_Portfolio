@@ -15,7 +15,7 @@ import SkillForm from '../components/SkillForm';
 import ProjectForm from '../components/ProjectForm';
 import ExperienceForm from '../components/ExperienceForm';
 import EducationForm from '../components/EducationForm';
-import CertificateForm from '../components/Certificateform';
+import CertificateForm from '../components/CertificateForm';
 import LanguageForm from '../components/LanguageForm';
 
 const AdminDashboard = () => {
