@@ -11,6 +11,12 @@ import { useAuth } from '../context/AuthContext';
 import { usePortfolio } from '../context/PortfolioContext';
 import Modal from '../components/Modal';
 import './AdminDashboard.css';
+import SkillForm from '../components/SkillForm';
+import ProjectForm from '../components/ProjectForm';
+import ExperienceForm from '../components/ExperienceForm';
+import EducationForm from '../components/EducationForm';
+import CertificateForm from '../components/CertificateForm';
+import LanguageForm from '../components/LanguageForm';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('personal');
@@ -555,6 +561,369 @@ const ProjectsTab = ({ data, onAdd, onEdit }) => {
           <p>No projects added yet. Click "Add Project" to get started.</p>
         </div>
       )}
+    </div>
+  );
+};
+
+// Experience Tab Component
+const ExperienceTab = ({ data, onAdd, onEdit }) => {
+  const { deleteExperience } = usePortfolio();
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this experience entry?')) {
+      const result = await deleteExperience(id);
+      if (result.success) {
+        toast.success('Experience entry deleted successfully');
+      } else {
+        toast.error(result.message);
+      }
+    }
+  };
+
+  return (
+    <div className="tab-content">
+      <div className="tab-header">
+        <h2>Experience Management</h2>
+        <button onClick={onAdd} className="btn btn-primary">
+          <FaPlus /> Add Experience
+        </button>
+      </div>
+
+      <div className="data-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Company</th>
+              <th>Position</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((exp) => (
+              <tr key={exp._id}>
+                <td>{exp.company}</td>
+                <td>{exp.position}</td>
+                <td>{exp.startDate}</td>
+                <td>{exp.endDate}</td>
+                <td>{exp.description}</td>
+                <td>
+                  <div className="action-buttons">
+                    <button 
+                      onClick={() => onEdit(exp)}
+                      className="btn-icon btn-edit"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(exp._id)}
+                      className="btn-icon btn-delete"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {data.length === 0 && (
+          <div className="empty-state">
+            <p>No experience entries added yet. Click "Add Experience" to get started.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Education Tab Component
+const EducationTab = ({ data, onAdd, onEdit }) => {
+  const { deleteEducation } = usePortfolio();
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this education entry?')) {
+      const result = await deleteEducation(id);
+      if (result.success) {
+        toast.success('Education entry deleted successfully');
+      } else {
+        toast.error(result.message);
+      }
+    }
+  };
+
+  return (
+    <div className="tab-content">
+      <div className="tab-header">
+        <h2>Education Management</h2>
+        <button onClick={onAdd} className="btn btn-primary">
+          <FaPlus /> Add Education
+        </button>
+      </div>
+
+      <div className="data-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Institution</th>
+              <th>Degree</th>
+              <th>Field</th>
+              <th>Start Year</th>
+              <th>End Year</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((edu) => (
+              <tr key={edu._id}>
+                <td>{edu.institution}</td>
+                <td>{edu.degree}</td>
+                <td>{edu.fieldOfStudy}</td>
+                <td>{edu.startYear}</td>
+                <td>{edu.endYear}</td>
+                <td>
+                  <div className="action-buttons">
+                    <button 
+                      onClick={() => onEdit(edu)}
+                      className="btn-icon btn-edit"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(edu._id)}
+                      className="btn-icon btn-delete"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {data.length === 0 && (
+          <div className="empty-state">
+            <p>No education entries added yet. Click "Add Education" to get started.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Certificates Tab Component
+const CertificatesTab = ({ data, onAdd, onEdit }) => {
+  const { deleteCertificate } = usePortfolio();
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this certificate?')) {
+      const result = await deleteCertificate(id);
+      if (result.success) {
+        toast.success('Certificate deleted successfully');
+      } else {
+        toast.error(result.message);
+      }
+    }
+  };
+
+  return (
+    <div className="tab-content">
+      <div className="tab-header">
+        <h2>Certificates Management</h2>
+        <button onClick={onAdd} className="btn btn-primary">
+          <FaPlus /> Add Certificate
+        </button>
+      </div>
+
+      <div className="data-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Issuer</th>
+              <th>Date</th>
+              <th>Credential ID</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((cert) => (
+              <tr key={cert._id}>
+                <td>{cert.name}</td>
+                <td>{cert.issuer}</td>
+                <td>{cert.date}</td>
+                <td>{cert.credentialId}</td>
+                <td>
+                  <div className="action-buttons">
+                    <button 
+                      onClick={() => onEdit(cert)}
+                      className="btn-icon btn-edit"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(cert._id)}
+                      className="btn-icon btn-delete"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {data.length === 0 && (
+          <div className="empty-state">
+            <p>No certificates added yet. Click "Add Certificate" to get started.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Messages Tab Component
+const MessagesTab = ({ data, onRefresh }) => {
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this message?')) {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/portfolio/messages/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        const result = await response.json();
+        if (result.success) {
+          toast.success('Message deleted successfully');
+          onRefresh();
+        } else {
+          toast.error(result.message);
+        }
+      } catch (error) {
+        toast.error('Error deleting message');
+      }
+    }
+  };
+
+  return (
+    <div className="tab-content">
+      <div className="tab-header">
+        <h2>Messages Management</h2>
+        <button onClick={onRefresh} className="btn btn-primary">
+          Refresh Messages
+        </button>
+      </div>
+
+      <div className="data-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Message</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((message) => (
+              <tr key={message._id}>
+                <td>{message.name}</td>
+                <td>{message.email}</td>
+                <td>{message.message}</td>
+                <td>{new Date(message.createdAt).toLocaleDateString()}</td>
+                <td>
+                  <div className="action-buttons">
+                    <button 
+                      onClick={() => handleDelete(message._id)}
+                      className="btn-icon btn-delete"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {data.length === 0 && (
+          <div className="empty-state">
+            <p>No messages received yet.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Languages Tab Component
+const LanguagesTab = ({ data, onAdd, onEdit }) => {
+  const { deleteLanguage } = usePortfolio();
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this language?')) {
+      const result = await deleteLanguage(id);
+      if (result.success) {
+        toast.success('Language deleted successfully');
+      } else {
+        toast.error(result.message);
+      }
+    }
+  };
+
+  return (
+    <div className="tab-content">
+      <div className="tab-header">
+        <h2>Languages Management</h2>
+        <button onClick={onAdd} className="btn btn-primary">
+          <FaPlus /> Add Language
+        </button>
+      </div>
+
+      <div className="data-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Language</th>
+              <th>Proficiency</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((lang) => (
+              <tr key={lang._id}>
+                <td>{lang.name}</td>
+                <td>{lang.proficiency}</td>
+                <td>
+                  <div className="action-buttons">
+                    <button 
+                      onClick={() => onEdit(lang)}
+                      className="btn-icon btn-edit"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(lang._id)}
+                      className="btn-icon btn-delete"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {data.length === 0 && (
+          <div className="empty-state">
+            <p>No languages added yet. Click "Add Language" to get started.</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
