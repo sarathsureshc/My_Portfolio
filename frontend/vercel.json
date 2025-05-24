@@ -1,5 +1,7 @@
 {
-  "buildCommand": "npx react-scripts build",
-  "outputDirectory": "build",
-  "installCommand": "npm install"
+  "build": {
+    "env": {
+      "NODE_OPTIONS": "--openssl-legacy-provider"
+    }
+  }
 }
