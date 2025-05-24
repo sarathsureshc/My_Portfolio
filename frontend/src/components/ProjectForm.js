@@ -202,3 +202,5 @@ const ProjectForm = ({ data, onClose, isEditing }) => {
     </form>
   );
 };
+
+export default ProjectForm;

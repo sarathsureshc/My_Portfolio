@@ -119,3 +119,5 @@ const SkillForm = ({ data, onClose, isEditing }) => {
     </form>
   );
 };
+
+export default SkillForm;

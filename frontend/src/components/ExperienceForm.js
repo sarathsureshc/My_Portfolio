@@ -183,3 +183,5 @@ const ExperienceForm = ({ data, onClose, isEditing }) => {
     </form>
   );
 };
+
+export default ExperienceForm;
