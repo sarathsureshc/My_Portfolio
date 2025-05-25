@@ -37,6 +37,7 @@ export const PortfolioProvider = ({ children }) => {
       const response = await axios.put(`${API_URL}/portfolio/personal-info`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
       });
       
@@ -47,6 +48,7 @@ export const PortfolioProvider = ({ children }) => {
       
       return { success: true };
     } catch (error) {
+      console.error('Error updating personal info:', error);
       return { 
         success: false, 
         message: error.response?.data?.message || 'Update failed' 

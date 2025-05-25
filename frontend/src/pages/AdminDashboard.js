@@ -257,19 +257,18 @@ const PersonalInfoTab = ({ data, onSave }) => {
     setLoading(true);
 
     const submitData = new FormData();
-    Object.keys(formData).forEach(key => {
-      if (key !== 'profileImage' || typeof formData[key] === 'object') {
-        submitData.append(key === 'profileImage' ? key : 'personalInfo', 
-          key === 'profileImage' ? formData[key] : 
-          key === 'personalInfo' ? JSON.stringify(formData) : formData[key]);
-      }
-    });
-
-    if (typeof formData.profileImage === 'object') {
+    
+    // Handle profile image separately
+    if (formData.profileImage && typeof formData.profileImage === 'object') {
       submitData.append('profileImage', formData.profileImage);
     }
-    
-    submitData.append('personalInfo', JSON.stringify(formData));
+
+    // Remove profileImage from personalInfo data
+    const personalInfoData = { ...formData };
+    delete personalInfoData.profileImage;
+
+    // Append personal info as JSON string
+    submitData.append('personalInfo', JSON.stringify(personalInfoData));
 
     const result = await updatePersonalInfo(submitData);
     
@@ -929,3 +928,51 @@ const LanguagesTab = ({ data, onAdd, onEdit }) => {
 };
 
 export default AdminDashboard;
+
+const validateForm = (data) => {
+  const errors = {};
+  
+  if (!data.name?.trim()) errors.name = 'Name is required';
+  if (!data.email?.trim()) errors.email = 'Email is required';
+  if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+    errors.email = 'Invalid email format';
+  }
+  
+  return Object.keys(errors).length === 0 ? null : errors;
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+
+  const errors = validateForm(formData);
+  if (errors) {
+    Object.values(errors).forEach(error => toast.error(error));
+    setLoading(false);
+    return;
+  }
+
+  const submitData = new FormData();
+  
+  // Handle profile image separately
+  if (formData.profileImage && typeof formData.profileImage === 'object') {
+    submitData.append('profileImage', formData.profileImage);
+  }
+
+  // Remove profileImage from personalInfo data
+  const personalInfoData = { ...formData };
+  delete personalInfoData.profileImage;
+
+  // Append personal info as JSON string
+  submitData.append('personalInfo', JSON.stringify(personalInfoData));
+
+  const result = await updatePersonalInfo(submitData);
+  
+  if (result.success) {
+    onSave();
+  } else {
+    toast.error(result.message);
+  }
+  
+  setLoading(false);
+};
