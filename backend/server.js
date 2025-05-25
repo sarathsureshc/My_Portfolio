@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth');
 const portfolioRoutes = require('./routes/portfolio');
 
 const app = express();
+app.set('trust proxy', 1); // trust first proxy
 
 // Security middleware
 app.use(helmet());
