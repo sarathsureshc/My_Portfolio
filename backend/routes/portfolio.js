@@ -28,7 +28,17 @@ router.put('/personal-info', auth, upload.single('profileImage'), async (req, re
       portfolio = new Portfolio({});
     }
 
-    const personalInfo = JSON.parse(req.body.personalInfo || '{}');
+    // Validate that personalInfo exists in request body
+    if (!req.body.personalInfo) {
+      return res.status(400).json({ message: 'Personal info data is required' });
+    }
+
+    let personalInfo;
+    try {
+      personalInfo = JSON.parse(req.body.personalInfo);
+    } catch (parseError) {
+      return res.status(400).json({ message: 'Invalid personal info data format' });
+    }
     
     if (req.file) {
       personalInfo.profileImage = req.file.path;
@@ -39,8 +49,8 @@ router.put('/personal-info', auth, upload.single('profileImage'), async (req, re
 
     res.json({ success: true, data: portfolio.personalInfo });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Personal Info Update Error:', error);
+    res.status(500).json({ message: error.message || 'Server error' });
   }
 });
 
