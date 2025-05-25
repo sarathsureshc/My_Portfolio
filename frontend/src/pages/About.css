@@ -6,25 +6,26 @@
 
 .about-container {
   flex: 1;
+  padding: 100px 20px 40px;
   max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .about-hero {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
 }
 
 .about-hero h1 {
-  font-size: 2.5rem;
   color: #333;
   margin-bottom: 1rem;
+  font-size: 2.5rem;
 }
 
 .subtitle {
-  font-size: 1.5rem;
   color: #666;
+  font-size: 1.5rem;
 }
 
 .about-content {
@@ -33,31 +34,72 @@
 }
 
 .bio-section,
-.values-section {
-  background: #fff;
-  padding: 2rem;
+.contact-section {
+  background: #ffffff;
   border-radius: 10px;
+  padding: 1.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
 }
 
-.values-section ul {
+.bio-section:hover,
+.contact-section:hover {
+  transform: translateY(-5px);
+}
+
+.bio-section h2,
+.contact-section h2 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 0.5rem;
+}
+
+.bio-section p {
+  color: #34495e;
+  line-height: 1.6;
+}
+
+.contact-list {
   list-style: none;
   padding: 0;
 }
 
-.values-section li {
+.contact-list li {
+  color: #34495e;
   margin-bottom: 1rem;
-  color: #666;
+  display: flex;
+  align-items: center;
+}
+
+.contact-list li strong {
+  color: #2c3e50;
+  min-width: 100px;
+  margin-right: 1rem;
+}
+
+.contact-list li a {
+  color: #3498db;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.contact-list li a:hover {
+  color: #2980b9;
 }
 
 @media (max-width: 768px) {
+  .about-container {
+    padding: 80px 15px 30px;
+  }
+
   .about-hero h1 {
     font-size: 2rem;
   }
-  
-  .about-container {
-    padding: 1rem;
+
+  .subtitle {
+    font-size: 1.2rem;
   }
 }
 

@@ -1,154 +1,116 @@
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .experience-container {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+  flex: 1;
+  padding: 100px 20px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.experience-title {
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #333;
+}
+
+.experience-timeline {
+  position: relative;
+  padding: 2rem 0;
+}
+
+.experience-item {
+  background: #ffffff;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.experience-item:hover {
+  transform: translateY(-5px);
+}
+
+.experience-content {
+  padding: 1.5rem;
+}
+
+.experience-date {
+  color: #3498db;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.experience-position {
+  color: #2c3e50;
+  margin: 0.5rem 0;
+  font-size: 1.25rem;
+}
+
+.experience-company {
+  color: #34495e;
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.experience-description {
+  color: #2c3e50;
+  margin: 1rem 0;
+  line-height: 1.6;
+}
+
+.experience-responsibilities {
+  margin-top: 1rem;
+}
+
+.experience-responsibilities h5 {
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.experience-responsibilities ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.experience-responsibilities li {
+  color: #34495e;
+  margin-bottom: 0.5rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.experience-responsibilities li::before {
+  content: "•";
+  color: #3498db;
+  position: absolute;
+  left: 0;
+}
+
+.experience-technologies {
+  margin-top: 1rem;
+}
+
+.tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tech-tag {
+  background: #f0f2f5;
+  color: #2c3e50;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .experience-container {
+    padding: 80px 15px 30px;
   }
-  
-  .experience-content {
-    flex: 1;
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-  }
-  
-  .experience-content h1 {
-    text-align: center;
-    font-size: 2.5rem;
-    color: #333;
-    margin-bottom: 2rem;
-  }
-  
-  .experience-timeline {
-    position: relative;
-    padding: 2rem 0;
-  }
-  
-  .experience-timeline::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 2px;
-    height: 100%;
-    background: #007bff;
-  }
-  
-  .experience-card {
-    width: calc(50% - 2rem);
-    margin: 2rem 0;
-    padding: 1.5rem;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-  }
-  
-  @media (max-width: 768px) {
-    .experience-timeline::before {
-      left: 0;
-    }
-    
-    .experience-card {
-      width: calc(100% - 2rem);
-      margin-left: 2rem;
-    }
-  }
-  
-  .experience-card:nth-child(odd) {
-    margin-left: auto;
-  }
-  
-  .experience-card::before {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background: #007bff;
-    border-radius: 50%;
-    top: 50%;
-  }
-  
-  .experience-card:nth-child(odd)::before {
-    left: -3rem;
-  }
-  
-  .experience-card:nth-child(even)::before {
-    right: -3rem;
-  }
-  
-  .experience-header h3 {
-    color: #333;
-    margin-bottom: 0.5rem;
-  }
-  
-  .company {
-    color: #007bff;
-    font-weight: 500;
-    margin-bottom: 0.25rem;
-  }
-  
-  .duration {
-    color: #666;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-  }
-  
-  .experience-body p {
-    color: #444;
-    line-height: 1.6;
-    margin-bottom: 1rem;
-  }
-  
-  .responsibilities {
-    list-style-type: none;
-    padding-left: 0;
-    margin-bottom: 1rem;
-  }
-  
-  .responsibilities li {
-    color: #555;
-    margin-bottom: 0.5rem;
-    padding-left: 1.5rem;
-    position: relative;
-  }
-  
-  .responsibilities li::before {
-    content: '→';
-    position: absolute;
-    left: 0;
-    color: #007bff;
-  }
-  
-  .technologies h4 {
-    color: #333;
-    margin-bottom: 0.5rem;
-  }
-  
-  .tech-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-  
-  .tech-tag {
-    background: #e9ecef;
-    color: #555;
-    padding: 0.25rem 0.75rem;
-    border-radius: 15px;
-    font-size: 0.9rem;
-  }
-  
-  @media (max-width: 768px) {
-    .experience-timeline::before {
-      left: 0;
-    }
-  
-    .experience-card {
-      width: calc(100% - 2rem);
-      margin-left: 2rem !important;
-    }
-  
-    .experience-card::before {
-      left: -2.5rem !important;
-    }
-  }
+}

@@ -7,52 +7,87 @@ import './Experience.css';
 
 const Experience = () => {
   const { portfolioData } = usePortfolio();
+  const personalInfo = portfolioData?.personalInfo || {};
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  };
+
+  const experienceVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
 
   return (
-    <div className="experience-container">
+    <div className="page-container">
       <Navbar />
-      <motion.div
-        className="experience-content"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h1>Work Experience</h1>
-        <div className="experience-timeline">
+      <div className="experience-container">
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="experience-title"
+        >
+          Work Experience
+        </motion.h1>
+
+        <motion.div
+          className="experience-timeline"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           {portfolioData?.experience?.map((exp, index) => (
             <motion.div
-              key={exp._id}
-              className="experience-card"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.2 }}
+              key={index}
+              className="experience-item"
+              variants={experienceVariants}
             >
-              <div className="experience-header">
-                <h3>{exp.position}</h3>
-                <p className="company">{exp.company}</p>
-                <p className="duration">{exp.startDate} - {exp.endDate || 'Present'}</p>
-              </div>
-              <div className="experience-body">
-                <p>{exp.description}</p>
-                <ul className="responsibilities">
-                  {exp.responsibilities?.map((responsibility, idx) => (
-                    <li key={idx}>{responsibility}</li>
-                  ))}
-                </ul>
-                <div className="technologies">
-                  <h4>Technologies:</h4>
-                  <div className="tech-tags">
-                    {exp.technologies?.map((tech, idx) => (
-                      <span key={idx} className="tech-tag">{tech}</span>
-                    ))}
-                  </div>
+              <div className="experience-content">
+                <div className="experience-date">
+                  {exp.startDate} - {exp.endDate || 'Present'}
                 </div>
+                <h3 className="experience-position">{exp.position}</h3>
+                <h4 className="experience-company">{exp.company}</h4>
+                <p className="experience-description">{exp.description}</p>
+                {exp.responsibilities && exp.responsibilities.length > 0 && (
+                  <div className="experience-responsibilities">
+                    <h5>Responsibilities:</h5>
+                    <ul>
+                      {exp.responsibilities.map((responsibility, idx) => (
+                        <li key={idx}>{responsibility}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {exp.technologies && exp.technologies.length > 0 && (
+                  <div className="experience-technologies">
+                    <h5>Technologies:</h5>
+                    <div className="tech-tags">
+                      {exp.technologies.map((tech, idx) => (
+                        <span key={idx} className="tech-tag">{tech}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </motion.div>
           ))}
-        </div>
-      </motion.div>
-      <Footer />
+        </motion.div>
+      </div>
+      <Footer personalInfo={personalInfo} />
     </div>
   );
 };
