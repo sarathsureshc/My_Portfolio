@@ -790,7 +790,7 @@ const MessagesTab = ({ data, onRefresh }) => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this message?')) {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/portfolio/messages/${id}`, {
+        const response = await fetch(`${API_URL}/portfolio/messages/${id}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
