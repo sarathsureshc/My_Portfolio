@@ -1,3 +1,7 @@
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import { usePortfolio } from '../context/PortfolioContext';
+
 const ExperienceForm = ({ data, onClose, isEditing }) => {
   const [formData, setFormData] = useState({
     company: data?.company || '',
