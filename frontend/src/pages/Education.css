@@ -1,0 +1,129 @@
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.education-container {
+  flex: 1;
+  padding: 100px 20px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.education-title {
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #333;
+}
+
+.education-timeline {
+  position: relative;
+  padding: 2rem 0;
+}
+
+.education-timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 100%;
+  background-color: #3498db;
+}
+
+.education-item {
+  position: relative;
+  margin-bottom: 3rem;
+  width: 100%;
+}
+
+.education-item::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 20px;
+  background-color: #3498db;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.education-content {
+  position: relative;
+  width: calc(50% - 30px);
+  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.education-item:nth-child(odd) .education-content {
+  margin-left: auto;
+}
+
+.education-date {
+  color: #3498db;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.education-degree {
+  color: #2c3e50;
+  margin: 0.5rem 0;
+  font-size: 1.25rem;
+}
+
+.education-institution {
+  color: #34495e;
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.education-location {
+  color: #7f8c8d;
+  font-style: italic;
+  margin: 0.5rem 0;
+}
+
+.education-description {
+  color: #2c3e50;
+  margin: 1rem 0;
+  line-height: 1.6;
+}
+
+.education-achievements {
+  margin-top: 1rem;
+}
+
+.education-achievements h5 {
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.education-achievements ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  color: #34495e;
+}
+
+.education-achievements li {
+  margin: 0.3rem 0;
+}
+
+@media (max-width: 768px) {
+  .education-timeline::before {
+    left: 0;
+  }
+
+  .education-item::before {
+    left: 0;
+  }
+
+  .education-content {
+    width: calc(100% - 30px);
+    margin-left: 30px !important;
+  }
+}
