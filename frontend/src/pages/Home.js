@@ -25,7 +25,7 @@ const Home = () => {
   return (
     <div className="home">
       <Navbar />
-      
+
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-container">
@@ -43,9 +43,9 @@ const Home = () => {
                 {personalInfo.title || 'Full Stack Developer'}
               </h2>
               <p className="hero-description">
-                {(personalInfo.summary || 'I create exceptional digital experiences with modern technologies and clean code.').split('.')[0] + '.'}
+                I’m a self-taught Full Stack Web Developer specializing in the MERN stack (MongoDB, Express.js, React, Node.js), with a strong foundation in building scalable, responsive, and user-centric web applications.
               </p>
-              
+
               <div className="hero-buttons">
                 <Link to="/projects" className="btn btn-primary">
                   View My Work <FaArrowRight />
@@ -54,7 +54,7 @@ const Home = () => {
                   Get In Touch
                 </Link>
               </div>
-              
+
               <div className="hero-social">
                 {personalInfo.github && (
                   <a href={personalInfo.github} target="_blank" rel="noopener noreferrer">
@@ -73,7 +73,7 @@ const Home = () => {
                 )}
               </div>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
