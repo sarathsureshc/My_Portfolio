@@ -453,3 +453,5 @@ PersonalInfoTab.propTypes = {
   data: PropTypes.object,
   onSave: PropTypes.func.isRequired
 };
+
+export default AdminDashboard;
