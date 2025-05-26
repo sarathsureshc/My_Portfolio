@@ -98,12 +98,12 @@ router.delete('/skills/:id', auth, async (req, res) => {
       return res.status(404).json({ message: 'Portfolio not found' });
     }
 
-    const skill = portfolio.skills.id(req.params.id);
-    if (!skill) {
+    const skillIndex = portfolio.skills.findIndex(skill => skill._id.toString() === req.params.id);
+    if (skillIndex === -1) {
       return res.status(404).json({ message: 'Skill not found' });
     }
 
-    skill.remove();
+    portfolio.skills.splice(skillIndex, 1);
     await portfolio.save();
 
     res.json({ success: true, data: portfolio.skills });
