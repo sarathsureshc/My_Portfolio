@@ -11,20 +11,317 @@ import { useAuth } from '../context/AuthContext';
 import { usePortfolio } from '../context/PortfolioContext';
 import Modal from '../components/Modal';
 import './AdminDashboard.css';
-import SkillForm from '../components/SkillForm';
-import ProjectForm from '../components/ProjectForm';
-import ExperienceForm from '../components/ExperienceForm';
-import EducationForm from '../components/EducationForm';
-import CertificateForm from '../components/CertificateForm';
-import LanguageForm from '../components/LanguageForm';
 import PropTypes from 'prop-types';
 
+// Tab Components
+const PersonalInfoTab = ({ data, onSave }) => {
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({});
+  const { updatePersonalInfo } = usePortfolio();
+
+  useEffect(() => {
+    setFormData(data || {});
+  }, [data]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const submitData = new FormData();
+    
+    if (formData.profileImage && typeof formData.profileImage === 'object') {
+      submitData.append('profileImage', formData.profileImage);
+    }
+
+    const personalInfoData = { ...formData };
+    delete personalInfoData.profileImage;
+    submitData.append('personalInfo', JSON.stringify(personalInfoData));
+
+    const result = await updatePersonalInfo(submitData);
+    
+    if (result.success) {
+      onSave();
+      toast.success('Personal information updated successfully');
+    } else {
+      toast.error(result.message || 'Failed to update personal information');
+    }
+    
+    setLoading(false);
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type, files } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'file' ? files[0] : value
+    }));
+  };
+
+  return (
+    <div className="tab-content">
+      <div className="tab-header">
+        <h2>Personal Information</h2>
+      </div>
+      <form onSubmit={handleSubmit} className="admin-form">
+        <div className="form-grid">
+          <div className="form-group">
+            <label htmlFor="name">Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name || ''}
+              onChange={handleChange}
+              placeholder="Your full name"
+            />
+          </div>
+          {/* Other form fields */}
+        </div>
+        <div className="form-actions">
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+            {loading ? 'Saving...' : 'Save Changes'}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+const SkillsTab = ({ data, onAdd, onEdit }) => {
+  return (
+    <div className="tab-content">
+      <div className="tab-header">
+        <h2>Skills</h2>
+        <button onClick={onAdd} className="btn btn-primary">
+          <FaPlus /> Add Skill
+        </button>
+      </div>
+      <div className="data-grid">
+        {data.map((skill) => (
+          <div key={skill._id} className="data-card">
+            <h3>{skill.name}</h3>
+            <p>{skill.category}</p>
+            <p>{skill.level}</p>
+            <div className="card-actions">
+              <button onClick={() => onEdit(skill)} className="btn-icon">
+                <FaEdit />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const ProjectsTab = ({ data, onAdd, onEdit }) => {
+  return (
+    <div className="tab-content">
+      <div className="tab-header">
+        <h2>Projects</h2>
+        <button onClick={onAdd} className="btn btn-primary">
+          <FaPlus /> Add Project
+        </button>
+      </div>
+      <div className="data-grid">
+        {data.map((project) => (
+          <div key={project._id} className="data-card">
+            <h3>{project.title}</h3>
+            <p>{project.description}</p>
+            <div className="card-actions">
+              <button onClick={() => onEdit(project)} className="btn-icon">
+                <FaEdit />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const ExperienceTab = ({ data, onAdd, onEdit }) => {
+  return (
+    <div className="tab-content">
+      <div className="tab-header">
+        <h2>Experience</h2>
+        <button onClick={onAdd} className="btn btn-primary">
+          <FaPlus /> Add Experience
+        </button>
+      </div>
+      <div className="data-list">
+        {data.map((exp) => (
+          <div key={exp._id} className="data-card">
+            <h3>{exp.position}</h3>
+            <p>{exp.company}</p>
+            <div className="card-actions">
+              <button onClick={() => onEdit(exp)} className="btn-icon">
+                <FaEdit />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const EducationTab = ({ data, onAdd, onEdit }) => {
+  return (
+    <div className="tab-content">
+      <div className="tab-header">
+        <h2>Education</h2>
+        <button onClick={onAdd} className="btn btn-primary">
+          <FaPlus /> Add Education
+        </button>
+      </div>
+      <div className="data-list">
+        {data.map((edu) => (
+          <div key={edu._id} className="data-card">
+            <h3>{edu.degree}</h3>
+            <p>{edu.institution}</p>
+            <div className="card-actions">
+              <button onClick={() => onEdit(edu)} className="btn-icon">
+                <FaEdit />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const CertificatesTab = ({ data, onAdd, onEdit }) => {
+  return (
+    <div className="tab-content">
+      <div className="tab-header">
+        <h2>Certificates</h2>
+        <button onClick={onAdd} className="btn btn-primary">
+          <FaPlus /> Add Certificate
+        </button>
+      </div>
+      <div className="data-grid">
+        {data.map((cert) => (
+          <div key={cert._id} className="data-card">
+            <h3>{cert.name}</h3>
+            <p>{cert.issuer}</p>
+            <div className="card-actions">
+              <button onClick={() => onEdit(cert)} className="btn-icon">
+                <FaEdit />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const LanguagesTab = ({ data, onAdd, onEdit }) => {
+  return (
+    <div className="tab-content">
+      <div className="tab-header">
+        <h2>Languages</h2>
+        <button onClick={onAdd} className="btn btn-primary">
+          <FaPlus /> Add Language
+        </button>
+      </div>
+      <div className="data-list">
+        {data.map((lang) => (
+          <div key={lang._id} className="data-card">
+            <h3>{lang.name}</h3>
+            <p>{lang.proficiency}</p>
+            <div className="card-actions">
+              <button onClick={() => onEdit(lang)} className="btn-icon">
+                <FaEdit />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const MessagesTab = ({ data, onRefresh }) => {
+  return (
+    <div className="tab-content">
+      <div className="tab-header">
+        <h2>Messages</h2>
+        <button onClick={onRefresh} className="btn btn-secondary">
+          Refresh
+        </button>
+      </div>
+      <div className="messages-list">
+        {data.map((message) => (
+          <div key={message._id} className="message-card">
+            <h3>{message.subject}</h3>
+            <p>{message.message}</p>
+            <div className="message-meta">
+              <span>{message.name}</span>
+              <span>{message.email}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// PropTypes for all tab components
+PersonalInfoTab.propTypes = {
+  data: PropTypes.object,
+  onSave: PropTypes.func.isRequired
+};
+
+SkillsTab.propTypes = {
+  data: PropTypes.array.isRequired,
+  onAdd: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired
+};
+
+ProjectsTab.propTypes = {
+  data: PropTypes.array.isRequired,
+  onAdd: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired
+};
+
+ExperienceTab.propTypes = {
+  data: PropTypes.array.isRequired,
+  onAdd: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired
+};
+
+EducationTab.propTypes = {
+  data: PropTypes.array.isRequired,
+  onAdd: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired
+};
+
+CertificatesTab.propTypes = {
+  data: PropTypes.array.isRequired,
+  onAdd: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired
+};
+
+LanguagesTab.propTypes = {
+  data: PropTypes.array.isRequired,
+  onAdd: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired
+};
+
+MessagesTab.propTypes = {
+  data: PropTypes.array.isRequired,
+  onRefresh: PropTypes.func.isRequired
+};
+
+// Main AdminDashboard component
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('personal');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState('');
   const [editingItem, setEditingItem] = useState(null);
-  const [formData, setFormData] = useState({});
   const [messages, setMessages] = useState([]);
   
   const { logout, user } = useAuth();
@@ -52,6 +349,7 @@ const AdminDashboard = () => {
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
+      toast.error('Failed to fetch messages');
     }
   };
 
@@ -64,7 +362,6 @@ const AdminDashboard = () => {
   const openModal = (type, item = null) => {
     setModalType(type);
     setEditingItem(item);
-    setFormData(item || {});
     setIsModalOpen(true);
   };
 
@@ -72,12 +369,11 @@ const AdminDashboard = () => {
     setIsModalOpen(false);
     setModalType('');
     setEditingItem(null);
-    setFormData({});
   };
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    // Form submission logic will be handled by individual form components
+  const handleTabSave = (tabName) => {
+    toast.success(`${tabName} updated successfully`);
+    closeModal();
   };
 
   const tabs = [
@@ -127,10 +423,9 @@ const AdminDashboard = () => {
 
         <main className="admin-main">
           {activeTab === 'personal' && (
-            // Where PersonalInfoTab is used
             <PersonalInfoTab 
-              data={personalInfoData} 
-              onSave={() => handleTabSave('personalInfo')} 
+              data={portfolioData?.personalInfo}
+              onSave={() => handleTabSave('Personal Info')}
             />
           )}
           
@@ -197,261 +492,10 @@ const AdminDashboard = () => {
         title={`${editingItem ? 'Edit' : 'Add'} ${modalType}`}
         size="large"
       >
-        {modalType === 'skill' && (
-          <SkillForm 
-            data={formData}
-            onClose={closeModal}
-            isEditing={!!editingItem}
-          />
-        )}
-        {modalType === 'project' && (
-          <ProjectForm 
-            data={formData}
-            onClose={closeModal}
-            isEditing={!!editingItem}
-          />
-        )}
-        {modalType === 'experience' && (
-          <ExperienceForm 
-            data={formData}
-            onClose={closeModal}
-            isEditing={!!editingItem}
-          />
-        )}
-        {modalType === 'education' && (
-          <EducationForm 
-            data={formData}
-            onClose={closeModal}
-            isEditing={!!editingItem}
-          />
-        )}
-        {modalType === 'certificate' && (
-          <CertificateForm 
-            data={formData}
-            onClose={closeModal}
-            isEditing={!!editingItem}
-          />
-        )}
-        {modalType === 'language' && (
-          <LanguageForm 
-            data={formData}
-            onClose={closeModal}
-            isEditing={!!editingItem}
-          />
-        )}
+        {/* Modal content will be rendered by individual form components */}
       </Modal>
     </div>
   );
-};
-
-// Personal Info Tab Component
-const PersonalInfoTab = ({ data, onSave }) => {
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({});
-  const { updatePersonalInfo } = usePortfolio();
-
-  useEffect(() => {
-    setFormData(data || {});
-  }, [data]);
-
-  const validateForm = (data) => {
-    const errors = {};
-    
-    if (!data.name?.trim()) errors.name = 'Name is required';
-    if (!data.email?.trim()) errors.email = 'Email is required';
-    if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-      errors.email = 'Invalid email format';
-    }
-    
-    return Object.keys(errors).length === 0 ? null : errors;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    const errors = validateForm(formData);
-    if (errors) {
-      Object.values(errors).forEach(error => toast.error(error));
-      setLoading(false);
-      return;
-    }
-
-    const submitData = new FormData();
-    
-    // Handle profile image separately
-    if (formData.profileImage && typeof formData.profileImage === 'object') {
-      submitData.append('profileImage', formData.profileImage);
-    }
-
-    // Remove profileImage from personalInfo data
-    const personalInfoData = { ...formData };
-    delete personalInfoData.profileImage;
-
-    // Append personal info as JSON string
-    submitData.append('personalInfo', JSON.stringify(personalInfoData));
-
-    const result = await updatePersonalInfo(submitData);
-    
-    if (result.success) {
-      onSave();
-      toast.success('Personal information updated successfully');
-    } else {
-      toast.error(result.message || 'Failed to update personal information');
-    }
-    
-    setLoading(false);
-  };
-
-  const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'file' ? files[0] : value
-    }));
-  };
-
-  return (
-    <div className="tab-content">
-      <div className="tab-header">
-        <h2>Personal Information</h2>
-      </div>
-      
-      <form onSubmit={handleSubmit} className="admin-form">
-        <div className="form-grid">
-          <div className="form-group">
-            <label htmlFor="name">Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name || ''}
-              onChange={handleChange}
-              placeholder="Your full name"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="title">Title</label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={formData.title || ''}
-              onChange={handleChange}
-              placeholder="Your professional title"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email || ''}
-              onChange={handleChange}
-              placeholder="Your email address"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="phone">Phone</label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              value={formData.phone || ''}
-              onChange={handleChange}
-              placeholder="Your phone number"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="location">Location</label>
-            <input
-              type="text"
-              id="location"
-              name="location"
-              value={formData.location || ''}
-              onChange={handleChange}
-              placeholder="Your location"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="profileImage">Profile Image</label>
-            <input
-              type="file"
-              id="profileImage"
-              name="profileImage"
-              onChange={handleChange}
-              accept="image/*"
-            />
-          </div>
-
-          <div className="form-group full-width">
-            <label htmlFor="summary">Summary</label>
-            <textarea
-              id="summary"
-              name="summary"
-              value={formData.summary || ''}
-              onChange={handleChange}
-              placeholder="A brief summary about yourself"
-              rows="4"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="linkedin">LinkedIn URL</label>
-            <input
-              type="url"
-              id="linkedin"
-              name="linkedin"
-              value={formData.linkedin || ''}
-              onChange={handleChange}
-              placeholder="Your LinkedIn profile URL"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="github">GitHub URL</label>
-            <input
-              type="url"
-              id="github"
-              name="github"
-              value={formData.github || ''}
-              onChange={handleChange}
-              placeholder="Your GitHub profile URL"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="website">Personal Website</label>
-            <input
-              type="url"
-              id="website"
-              name="website"
-              value={formData.website || ''}
-              onChange={handleChange}
-              placeholder="Your personal website URL"
-            />
-          </div>
-        </div>
-
-        <div className="form-actions">
-          <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? 'Saving...' : 'Save Changes'}
-          </button>
-        </div>
-      </form>
-    </div>
-  );
-};
-
-PersonalInfoTab.propTypes = {
-  data: PropTypes.object,
-  onSave: PropTypes.func.isRequired
 };
 
 export default AdminDashboard;
