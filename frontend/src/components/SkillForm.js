@@ -93,15 +93,29 @@ const SkillForm = ({ data, onClose, isEditing }) => {
       </div>
 
       <div className="form-group">
-        <label className="form-label">Icon (Optional)</label>
+        <label className="form-label">Icon URL (Optional)</label>
         <input
-          type="text"
+          type="url"
           name="icon"
           value={formData.icon}
           onChange={handleChange}
           className="form-input"
-          placeholder="Icon name or emoji"
+          placeholder="https://example.com/icon.png"
         />
+        {formData.icon && (
+            <div className="icon-preview">
+                <img 
+                    src={formData.icon} 
+                    alt="Icon preview" 
+                    style={{ 
+                        width: '40px', 
+                        height: '40px', 
+                        objectFit: 'contain',
+                        marginTop: '8px'
+                    }} 
+                />
+            </div>
+        )}
       </div>
 
       <div className="form-buttons">
