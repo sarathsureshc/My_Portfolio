@@ -94,13 +94,22 @@ router.put('/skills/:id', auth, async (req, res) => {
 router.delete('/skills/:id', auth, async (req, res) => {
   try {
     const portfolio = await Portfolio.findOne();
-    portfolio.skills.id(req.params.id).remove();
+    if (!portfolio) {
+      return res.status(404).json({ message: 'Portfolio not found' });
+    }
+
+    const skill = portfolio.skills.id(req.params.id);
+    if (!skill) {
+      return res.status(404).json({ message: 'Skill not found' });
+    }
+
+    skill.remove();
     await portfolio.save();
 
     res.json({ success: true, data: portfolio.skills });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Delete skill error:', error);
+    res.status(500).json({ message: error.message || 'Server error' });
   }
 });
 

@@ -90,13 +90,24 @@ export const PortfolioProvider = ({ children }) => {
 
   const deleteSkill = async (id) => {
     try {
-      const response = await axios.delete(`${API_URL}/portfolio/skills/${id}`);
-      setPortfolioData(prev => ({
-        ...prev,
-        skills: response.data.data
-      }));
-      return { success: true };
+      const response = await axios.delete(`${API_URL}/portfolio/skills/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (response.data.success) {
+        setPortfolioData(prev => ({
+          ...prev,
+          skills: response.data.data
+        }));
+        return { success: true };
+      } else {
+        throw new Error(response.data.message);
+      }
     } catch (error) {
+      console.error('Error deleting skill:', error);
       return { 
         success: false, 
         message: error.response?.data?.message || 'Failed to delete skill' 
