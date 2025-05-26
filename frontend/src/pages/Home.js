@@ -43,7 +43,7 @@ const Home = () => {
                 {personalInfo.title || 'Full Stack Developer'}
               </h2>
               <p className="hero-description">
-                {personalInfo.summary || 'I create exceptional digital experiences with modern technologies and clean code.'}
+                {(personalInfo.summary || 'I create exceptional digital experiences with modern technologies and clean code.').split('.')[0] + '.'}
               </p>
               
               <div className="hero-buttons">
@@ -114,7 +114,11 @@ const Home = () => {
                     className="skill-item"
                   >
                     <div className="skill-icon">
-                      {skill.icon || skill.name.charAt(0)}
+                      {skill.icon ? (
+                        <img src={skill.icon} alt={skill.name} />
+                      ) : (
+                        skill.name.charAt(0)
+                      )}
                     </div>
                     <span>{skill.name}</span>
                   </motion.div>
