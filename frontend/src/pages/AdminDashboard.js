@@ -13,7 +13,7 @@ import Modal from '../components/Modal';
 import './AdminDashboard.css';
 import PropTypes from 'prop-types';
 
-// Tab Components
+// Personal Info Tab Component
 const PersonalInfoTab = ({ data, onSave }) => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({});
@@ -75,7 +75,104 @@ const PersonalInfoTab = ({ data, onSave }) => {
               placeholder="Your full name"
             />
           </div>
-          {/* Other form fields */}
+          <div className="form-group">
+            <label htmlFor="title">Title</label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value={formData.title || ''}
+              onChange={handleChange}
+              placeholder="Your professional title"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email || ''}
+              onChange={handleChange}
+              placeholder="Your email address"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="phone">Phone</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              value={formData.phone || ''}
+              onChange={handleChange}
+              placeholder="Your phone number"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="location">Location</label>
+            <input
+              type="text"
+              id="location"
+              name="location"
+              value={formData.location || ''}
+              onChange={handleChange}
+              placeholder="Your location"
+            />
+          </div>
+          <div className="form-group full-width">
+            <label htmlFor="summary">Summary</label>
+            <textarea
+              id="summary"
+              name="summary"
+              value={formData.summary || ''}
+              onChange={handleChange}
+              placeholder="A brief summary about yourself"
+              rows="4"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="profileImage">Profile Image</label>
+            <input
+              type="file"
+              id="profileImage"
+              name="profileImage"
+              onChange={handleChange}
+              accept="image/*"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="linkedin">LinkedIn URL</label>
+            <input
+              type="url"
+              id="linkedin"
+              name="linkedin"
+              value={formData.linkedin || ''}
+              onChange={handleChange}
+              placeholder="Your LinkedIn profile URL"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="github">GitHub URL</label>
+            <input
+              type="url"
+              id="github"
+              name="github"
+              value={formData.github || ''}
+              onChange={handleChange}
+              placeholder="Your GitHub profile URL"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="website">Website URL</label>
+            <input
+              type="url"
+              id="website"
+              name="website"
+              value={formData.website || ''}
+              onChange={handleChange}
+              placeholder="Your personal website URL"
+            />
+          </div>
         </div>
         <div className="form-actions">
           <button type="submit" className="btn btn-primary" disabled={loading}>
@@ -87,24 +184,32 @@ const PersonalInfoTab = ({ data, onSave }) => {
   );
 };
 
-const SkillsTab = ({ data, onAdd, onEdit }) => {
+// Generic Tab Component for other sections
+const GenericTab = ({ title, data, onAdd, onEdit, onDelete }) => {
   return (
     <div className="tab-content">
       <div className="tab-header">
-        <h2>Skills</h2>
+        <h2>{title}</h2>
         <button onClick={onAdd} className="btn btn-primary">
-          <FaPlus /> Add Skill
+          <FaPlus /> Add {title.slice(0, -1)}
         </button>
       </div>
       <div className="data-grid">
-        {data.map((skill) => (
-          <div key={skill._id} className="data-card">
-            <h3>{skill.name}</h3>
-            <p>{skill.category}</p>
-            <p>{skill.level}</p>
+        {data.map((item) => (
+          <div key={item._id} className="data-card">
+            <h3>{item.name || item.title || item.degree || item.position}</h3>
+            <p>{item.category || item.company || item.institution || item.description}</p>
+            {item.level && <p>Level: {item.level}</p>}
+            {item.proficiency && <p>Proficiency: {item.proficiency}</p>}
             <div className="card-actions">
-              <button onClick={() => onEdit(skill)} className="btn-icon">
+              <button onClick={() => onEdit(item)} className="btn-icon">
                 <FaEdit />
+              </button>
+              <button 
+                onClick={() => onDelete(item._id)} 
+                className="btn-icon btn-danger"
+              >
+                <FaTrash />
               </button>
             </div>
           </div>
@@ -114,136 +219,7 @@ const SkillsTab = ({ data, onAdd, onEdit }) => {
   );
 };
 
-const ProjectsTab = ({ data, onAdd, onEdit }) => {
-  return (
-    <div className="tab-content">
-      <div className="tab-header">
-        <h2>Projects</h2>
-        <button onClick={onAdd} className="btn btn-primary">
-          <FaPlus /> Add Project
-        </button>
-      </div>
-      <div className="data-grid">
-        {data.map((project) => (
-          <div key={project._id} className="data-card">
-            <h3>{project.title}</h3>
-            <p>{project.description}</p>
-            <div className="card-actions">
-              <button onClick={() => onEdit(project)} className="btn-icon">
-                <FaEdit />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const ExperienceTab = ({ data, onAdd, onEdit }) => {
-  return (
-    <div className="tab-content">
-      <div className="tab-header">
-        <h2>Experience</h2>
-        <button onClick={onAdd} className="btn btn-primary">
-          <FaPlus /> Add Experience
-        </button>
-      </div>
-      <div className="data-list">
-        {data.map((exp) => (
-          <div key={exp._id} className="data-card">
-            <h3>{exp.position}</h3>
-            <p>{exp.company}</p>
-            <div className="card-actions">
-              <button onClick={() => onEdit(exp)} className="btn-icon">
-                <FaEdit />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const EducationTab = ({ data, onAdd, onEdit }) => {
-  return (
-    <div className="tab-content">
-      <div className="tab-header">
-        <h2>Education</h2>
-        <button onClick={onAdd} className="btn btn-primary">
-          <FaPlus /> Add Education
-        </button>
-      </div>
-      <div className="data-list">
-        {data.map((edu) => (
-          <div key={edu._id} className="data-card">
-            <h3>{edu.degree}</h3>
-            <p>{edu.institution}</p>
-            <div className="card-actions">
-              <button onClick={() => onEdit(edu)} className="btn-icon">
-                <FaEdit />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const CertificatesTab = ({ data, onAdd, onEdit }) => {
-  return (
-    <div className="tab-content">
-      <div className="tab-header">
-        <h2>Certificates</h2>
-        <button onClick={onAdd} className="btn btn-primary">
-          <FaPlus /> Add Certificate
-        </button>
-      </div>
-      <div className="data-grid">
-        {data.map((cert) => (
-          <div key={cert._id} className="data-card">
-            <h3>{cert.name}</h3>
-            <p>{cert.issuer}</p>
-            <div className="card-actions">
-              <button onClick={() => onEdit(cert)} className="btn-icon">
-                <FaEdit />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const LanguagesTab = ({ data, onAdd, onEdit }) => {
-  return (
-    <div className="tab-content">
-      <div className="tab-header">
-        <h2>Languages</h2>
-        <button onClick={onAdd} className="btn btn-primary">
-          <FaPlus /> Add Language
-        </button>
-      </div>
-      <div className="data-list">
-        {data.map((lang) => (
-          <div key={lang._id} className="data-card">
-            <h3>{lang.name}</h3>
-            <p>{lang.proficiency}</p>
-            <div className="card-actions">
-              <button onClick={() => onEdit(lang)} className="btn-icon">
-                <FaEdit />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
+// Messages Tab Component
 const MessagesTab = ({ data, onRefresh }) => {
   return (
     <div className="tab-content">
@@ -261,6 +237,7 @@ const MessagesTab = ({ data, onRefresh }) => {
             <div className="message-meta">
               <span>{message.name}</span>
               <span>{message.email}</span>
+              <span>{new Date(message.createdAt).toLocaleDateString()}</span>
             </div>
           </div>
         ))}
@@ -269,46 +246,18 @@ const MessagesTab = ({ data, onRefresh }) => {
   );
 };
 
-// PropTypes for all tab components
+// PropTypes
 PersonalInfoTab.propTypes = {
   data: PropTypes.object,
   onSave: PropTypes.func.isRequired
 };
 
-SkillsTab.propTypes = {
+GenericTab.propTypes = {
+  title: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
   onAdd: PropTypes.func.isRequired,
-  onEdit: PropTypes.func.isRequired
-};
-
-ProjectsTab.propTypes = {
-  data: PropTypes.array.isRequired,
-  onAdd: PropTypes.func.isRequired,
-  onEdit: PropTypes.func.isRequired
-};
-
-ExperienceTab.propTypes = {
-  data: PropTypes.array.isRequired,
-  onAdd: PropTypes.func.isRequired,
-  onEdit: PropTypes.func.isRequired
-};
-
-EducationTab.propTypes = {
-  data: PropTypes.array.isRequired,
-  onAdd: PropTypes.func.isRequired,
-  onEdit: PropTypes.func.isRequired
-};
-
-CertificatesTab.propTypes = {
-  data: PropTypes.array.isRequired,
-  onAdd: PropTypes.func.isRequired,
-  onEdit: PropTypes.func.isRequired
-};
-
-LanguagesTab.propTypes = {
-  data: PropTypes.array.isRequired,
-  onAdd: PropTypes.func.isRequired,
-  onEdit: PropTypes.func.isRequired
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired
 };
 
 MessagesTab.propTypes = {
@@ -316,7 +265,7 @@ MessagesTab.propTypes = {
   onRefresh: PropTypes.func.isRequired
 };
 
-// Main AdminDashboard component
+// Main AdminDashboard Component
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('personal');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -325,7 +274,7 @@ const AdminDashboard = () => {
   const [messages, setMessages] = useState([]);
   
   const { logout, user } = useAuth();
-  const { portfolioData, loading } = usePortfolio();
+  const { portfolioData, loading, fetchPortfolioData } = usePortfolio();
   const navigate = useNavigate();
 
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -350,6 +299,28 @@ const AdminDashboard = () => {
     } catch (error) {
       console.error('Error fetching messages:', error);
       toast.error('Failed to fetch messages');
+    }
+  };
+
+  const handleDelete = async (type, id) => {
+    try {
+      const response = await fetch(`${API_URL}/portfolio/${type}/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      const data = await response.json();
+      
+      if (data.success) {
+        toast.success(`${type} deleted successfully`);
+        await fetchPortfolioData();
+      } else {
+        toast.error(data.message || `Failed to delete ${type}`);
+      }
+    } catch (error) {
+      console.error(`Error deleting ${type}:`, error);
+      toast.error(`Failed to delete ${type}`);
     }
   };
 
@@ -430,50 +401,62 @@ const AdminDashboard = () => {
           )}
           
           {activeTab === 'skills' && (
-            <SkillsTab 
+            <GenericTab 
+              title="Skills"
               data={portfolioData?.skills || []}
               onAdd={() => openModal('skill')}
               onEdit={(item) => openModal('skill', item)}
+              onDelete={(id) => handleDelete('skills', id)}
             />
           )}
           
           {activeTab === 'projects' && (
-            <ProjectsTab 
+            <GenericTab 
+              title="Projects"
               data={portfolioData?.projects || []}
               onAdd={() => openModal('project')}
               onEdit={(item) => openModal('project', item)}
+              onDelete={(id) => handleDelete('projects', id)}
             />
           )}
           
           {activeTab === 'experience' && (
-            <ExperienceTab 
+            <GenericTab 
+              title="Experience"
               data={portfolioData?.experience || []}
               onAdd={() => openModal('experience')}
               onEdit={(item) => openModal('experience', item)}
+              onDelete={(id) => handleDelete('experience', id)}
             />
           )}
           
           {activeTab === 'education' && (
-            <EducationTab 
+            <GenericTab 
+              title="Education"
               data={portfolioData?.education || []}
               onAdd={() => openModal('education')}
               onEdit={(item) => openModal('education', item)}
+              onDelete={(id) => handleDelete('education', id)}
             />
           )}
           
           {activeTab === 'certificates' && (
-            <CertificatesTab 
+            <GenericTab 
+              title="Certificates"
               data={portfolioData?.certificates || []}
               onAdd={() => openModal('certificate')}
               onEdit={(item) => openModal('certificate', item)}
+              onDelete={(id) => handleDelete('certificates', id)}
             />
           )}
           
           {activeTab === 'languages' && (
-            <LanguagesTab 
+            <GenericTab 
+              title="Languages"
               data={portfolioData?.languages || []}
               onAdd={() => openModal('language')}
               onEdit={(item) => openModal('language', item)}
+              onDelete={(id) => handleDelete('languages', id)}
             />
           )}
           
