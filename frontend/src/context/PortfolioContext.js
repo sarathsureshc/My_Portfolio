@@ -97,15 +97,11 @@ export const PortfolioProvider = ({ children }) => {
         }
       });
       
-      if (response.data.success) {
-        setPortfolioData(prev => ({
-          ...prev,
-          skills: response.data.data
-        }));
-        return { success: true };
-      } else {
-        throw new Error(response.data.message);
-      }
+      setPortfolioData(prev => ({
+        ...prev,
+        skills: prev.skills.filter(skill => skill._id !== id)
+      }));
+      return { success: true };
     } catch (error) {
       console.error('Error deleting skill:', error);
       return { 
