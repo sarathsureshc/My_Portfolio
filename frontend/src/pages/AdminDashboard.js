@@ -280,7 +280,45 @@ const AdminDashboard = () => {
   const [messages, setMessages] = useState([]);
   
   const { logout, user } = useAuth();
-  const { portfolioData, loading, fetchPortfolioData } = usePortfolio();
+  const { portfolioData, loading, fetchPortfolioData, deleteSkill, deleteProject, deleteExperience, deleteEducation, deleteCertificate, deleteLanguage } = usePortfolio();
+
+  const handleDelete = async (type, id) => {
+    try {
+      let result;
+      switch (type) {
+        case 'skills':
+          result = await deleteSkill(id);
+          break;
+        case 'projects':
+          result = await deleteProject(id);
+          break;
+        case 'experience':
+          result = await deleteExperience(id);
+          break;
+        case 'education':
+          result = await deleteEducation(id);
+          break;
+        case 'certificates':
+          result = await deleteCertificate(id);
+          break;
+        case 'languages':
+          result = await deleteLanguage(id);
+          break;
+        default:
+          toast.error('Invalid type');
+          return;
+      }
+
+      if (result.success) {
+        toast.success(`${type} deleted successfully`);
+      } else {
+        toast.error(result.message || `Failed to delete ${type}`);
+      }
+    } catch (error) {
+      console.error(`Error deleting ${type}:`, error);
+      toast.error(`Failed to delete ${type}`);
+    }
+  };
   const navigate = useNavigate();
 
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -305,28 +343,6 @@ const AdminDashboard = () => {
     } catch (error) {
       console.error('Error fetching messages:', error);
       toast.error('Failed to fetch messages');
-    }
-  };
-
-  const handleDelete = async (type, id) => {
-    try {
-      const response = await fetch(`${API_URL}/portfolio/${type}/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      const data = await response.json();
-      
-      if (data.success) {
-        toast.success(`${type} deleted successfully`);
-        await fetchPortfolioData();
-      } else {
-        toast.error(data.message || `Failed to delete ${type}`);
-      }
-    } catch (error) {
-      console.error(`Error deleting ${type}:`, error);
-      toast.error(`Failed to delete ${type}`);
     }
   };
 

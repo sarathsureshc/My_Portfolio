@@ -12,14 +12,13 @@ const Footer = ({ personalInfo }) => {
           <div className="footer-section">
             <h3>{personalInfo?.name || 'Your Name'}</h3>
             <p>{personalInfo?.title || 'Full Stack Developer'}</p>
-            <p>{personalInfo?.summary || 'Building amazing digital experiences'}</p>
           </div>
           
           <div className="footer-section">
             <h4>Quick Links</h4>
             <div className="footer-links">
               <a href="/">Home</a>
-              {/* <a href="/about">About</a> */}
+              <a href="/about">About</a>
               <a href="/projects">Projects</a>
               <a href="/contact">Contact</a>
             </div>
