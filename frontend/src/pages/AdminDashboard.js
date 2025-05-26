@@ -12,6 +12,12 @@ import { usePortfolio } from '../context/PortfolioContext';
 import Modal from '../components/Modal';
 import './AdminDashboard.css';
 import PropTypes from 'prop-types';
+import SkillForm from '../components/SkillForm';
+import ProjectForm from '../components/ProjectForm';
+import ExperienceForm from '../components/ExperienceForm';
+import EducationForm from '../components/EducationForm';
+import CertificateForm from '../components/CertificateForm';
+import LanguageForm from '../components/LanguageForm';
 
 // Personal Info Tab Component
 const PersonalInfoTab = ({ data, onSave }) => {
@@ -475,7 +481,48 @@ const AdminDashboard = () => {
         title={`${editingItem ? 'Edit' : 'Add'} ${modalType}`}
         size="large"
       >
-        {/* Modal content will be rendered by individual form components */}
+        {modalType === 'skill' && (
+          <SkillForm
+            data={editingItem}
+            onClose={closeModal}
+            isEditing={!!editingItem}
+          />
+        )}
+        {modalType === 'project' && (
+          <ProjectForm
+            data={editingItem}
+            onClose={closeModal}
+            isEditing={!!editingItem}
+          />
+        )}
+        {modalType === 'experience' && (
+          <ExperienceForm
+            data={editingItem}
+            onClose={closeModal}
+            isEditing={!!editingItem}
+          />
+        )}
+        {modalType === 'education' && (
+          <EducationForm
+            data={editingItem}
+            onClose={closeModal}
+            isEditing={!!editingItem}
+          />
+        )}
+        {modalType === 'certificate' && (
+          <CertificateForm
+            data={editingItem}
+            onClose={closeModal}
+            isEditing={!!editingItem}
+          />
+        )}
+        {modalType === 'language' && (
+          <LanguageForm
+            data={editingItem}
+            onClose={closeModal}
+            isEditing={!!editingItem}
+          />
+        )}
       </Modal>
     </div>
   );
