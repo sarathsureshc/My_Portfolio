@@ -17,6 +17,7 @@ import ExperienceForm from '../components/ExperienceForm';
 import EducationForm from '../components/EducationForm';
 import CertificateForm from '../components/CertificateForm';
 import LanguageForm from '../components/LanguageForm';
+import PropTypes from 'prop-types';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('personal');
@@ -126,9 +127,10 @@ const AdminDashboard = () => {
 
         <main className="admin-main">
           {activeTab === 'personal' && (
+            // Where PersonalInfoTab is used
             <PersonalInfoTab 
-              data={portfolioData?.personalInfo} 
-              onSave={() => toast.success('Personal info updated')}
+              data={personalInfoData} 
+              onSave={() => handleTabSave('personalInfo')} 
             />
           )}
           
@@ -244,17 +246,36 @@ const AdminDashboard = () => {
 
 // Personal Info Tab Component
 const PersonalInfoTab = ({ data, onSave }) => {
-  const [formData, setFormData] = useState(data || {});
   const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({});
   const { updatePersonalInfo } = usePortfolio();
 
   useEffect(() => {
     setFormData(data || {});
   }, [data]);
 
+  const validateForm = (data) => {
+    const errors = {};
+    
+    if (!data.name?.trim()) errors.name = 'Name is required';
+    if (!data.email?.trim()) errors.email = 'Email is required';
+    if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+      errors.email = 'Invalid email format';
+    }
+    
+    return Object.keys(errors).length === 0 ? null : errors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
+    const errors = validateForm(formData);
+    if (errors) {
+      Object.values(errors).forEach(error => toast.error(error));
+      setLoading(false);
+      return;
+    }
 
     const submitData = new FormData();
     
@@ -274,8 +295,9 @@ const PersonalInfoTab = ({ data, onSave }) => {
     
     if (result.success) {
       onSave();
+      toast.success('Personal information updated successfully');
     } else {
-      toast.error(result.message);
+      toast.error(result.message || 'Failed to update personal information');
     }
     
     setLoading(false);
@@ -298,681 +320,136 @@ const PersonalInfoTab = ({ data, onSave }) => {
       <form onSubmit={handleSubmit} className="admin-form">
         <div className="form-grid">
           <div className="form-group">
-            <label className="form-label">Full Name</label>
+            <label htmlFor="name">Name</label>
             <input
               type="text"
+              id="name"
               name="name"
               value={formData.name || ''}
               onChange={handleChange}
-              className="form-input"
               placeholder="Your full name"
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">Professional Title</label>
+            <label htmlFor="title">Title</label>
             <input
               type="text"
+              id="title"
               name="title"
               value={formData.title || ''}
               onChange={handleChange}
-              className="form-input"
-              placeholder="e.g., Full Stack Developer"
+              placeholder="Your professional title"
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">Email</label>
+            <label htmlFor="email">Email</label>
             <input
               type="email"
+              id="email"
               name="email"
               value={formData.email || ''}
               onChange={handleChange}
-              className="form-input"
-              placeholder="your.email@example.com"
+              placeholder="Your email address"
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">Phone</label>
+            <label htmlFor="phone">Phone</label>
             <input
               type="tel"
+              id="phone"
               name="phone"
               value={formData.phone || ''}
               onChange={handleChange}
-              className="form-input"
-              placeholder="+1 (555) 123-4567"
+              placeholder="Your phone number"
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">Location</label>
+            <label htmlFor="location">Location</label>
             <input
               type="text"
+              id="location"
               name="location"
               value={formData.location || ''}
               onChange={handleChange}
-              className="form-input"
-              placeholder="City, Country"
+              placeholder="Your location"
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">LinkedIn URL</label>
+            <label htmlFor="profileImage">Profile Image</label>
+            <input
+              type="file"
+              id="profileImage"
+              name="profileImage"
+              onChange={handleChange}
+              accept="image/*"
+            />
+          </div>
+
+          <div className="form-group full-width">
+            <label htmlFor="summary">Summary</label>
+            <textarea
+              id="summary"
+              name="summary"
+              value={formData.summary || ''}
+              onChange={handleChange}
+              placeholder="A brief summary about yourself"
+              rows="4"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="linkedin">LinkedIn URL</label>
             <input
               type="url"
+              id="linkedin"
               name="linkedin"
               value={formData.linkedin || ''}
               onChange={handleChange}
-              className="form-input"
-              placeholder="https://linkedin.com/in/yourprofile"
+              placeholder="Your LinkedIn profile URL"
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">GitHub URL</label>
+            <label htmlFor="github">GitHub URL</label>
             <input
               type="url"
+              id="github"
               name="github"
               value={formData.github || ''}
               onChange={handleChange}
-              className="form-input"
-              placeholder="https://github.com/yourusername"
+              placeholder="Your GitHub profile URL"
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">Website URL</label>
+            <label htmlFor="website">Personal Website</label>
             <input
               type="url"
+              id="website"
               name="website"
               value={formData.website || ''}
               onChange={handleChange}
-              className="form-input"
-              placeholder="https://yourwebsite.com"
+              placeholder="Your personal website URL"
             />
           </div>
         </div>
 
-        <div className="form-group">
-          <label className="form-label">Professional Summary</label>
-          <textarea
-            name="summary"
-            value={formData.summary || ''}
-            onChange={handleChange}
-            className="form-input form-textarea"
-            rows="4"
-            placeholder="Write a brief professional summary..."
-          />
+        <div className="form-actions">
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+            {loading ? 'Saving...' : 'Save Changes'}
+          </button>
         </div>
-
-        <div className="form-group">
-          <label className="form-label">Profile Image</label>
-          <input
-            type="file"
-            name="profileImage"
-            onChange={handleChange}
-            className="form-input"
-            accept="image/*"
-          />
-        </div>
-
-        <button 
-          type="submit" 
-          className={`btn btn-primary ${loading ? 'loading' : ''}`}
-          disabled={loading}
-        >
-          {loading ? 'Saving...' : 'Save Changes'}
-        </button>
       </form>
     </div>
   );
 };
 
-// Skills Tab Component  
-const SkillsTab = ({ data, onAdd, onEdit }) => {
-  const { deleteSkill } = usePortfolio();
-
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this skill?')) {
-      const result = await deleteSkill(id);
-      if (result.success) {
-        toast.success('Skill deleted successfully');
-      } else {
-        toast.error(result.message);
-      }
-    }
-  };
-
-  return (
-    <div className="tab-content">
-      <div className="tab-header">
-        <h2>Skills Management</h2>
-        <button onClick={onAdd} className="btn btn-primary">
-          <FaPlus /> Add Skill
-        </button>
-      </div>
-
-      <div className="data-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Level</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((skill) => (
-              <tr key={skill._id}>
-                <td>{skill.name}</td>
-                <td>{skill.category}</td>
-                <td>{skill.level}</td>
-                <td>
-                  <div className="action-buttons">
-                    <button 
-                      onClick={() => onEdit(skill)}
-                      className="btn-icon btn-edit"
-                    >
-                      <FaEdit />
-                    </button>
-                    <button 
-                      onClick={() => handleDelete(skill._id)}
-                      className="btn-icon btn-delete"
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {data.length === 0 && (
-          <div className="empty-state">
-            <p>No skills added yet. Click "Add Skill" to get started.</p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-// Projects Tab Component
-const ProjectsTab = ({ data, onAdd, onEdit }) => {
-  const { deleteProject } = usePortfolio();
-
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this project?')) {
-      const result = await deleteProject(id);
-      if (result.success) {
-        toast.success('Project deleted successfully');
-      } else {
-        toast.error(result.message);
-      }
-    }
-  };
-
-  return (
-    <div className="tab-content">
-      <div className="tab-header">
-        <h2>Projects Management</h2>
-        <button onClick={onAdd} className="btn btn-primary">
-          <FaPlus /> Add Project
-        </button>
-      </div>
-
-      <div className="projects-grid">
-        {data.map((project) => (
-          <div key={project._id} className="project-card-admin">
-            {project.image && (
-              <img src={project.image} alt={project.title} className="project-image-admin" />
-            )}
-            <div className="project-content-admin">
-              <h3>{project.title}</h3>
-              <p>{project.description}</p>
-              <div className="project-meta">
-                <span>Status: {project.status}</span>
-                <span>Technologies: {project.technologies?.length || 0}</span>
-              </div>
-              <div className="action-buttons">
-                <button 
-                  onClick={() => onEdit(project)}
-                  className="btn btn-secondary btn-sm"
-                >
-                  <FaEdit /> Edit
-                </button>
-                <button 
-                  onClick={() => handleDelete(project._id)}
-                  className="btn btn-danger btn-sm"
-                >
-                  <FaTrash /> Delete
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-      
-      {data.length === 0 && (
-        <div className="empty-state">
-          <p>No projects added yet. Click "Add Project" to get started.</p>
-        </div>
-      )}
-    </div>
-  );
-};
-
-// Experience Tab Component
-const ExperienceTab = ({ data, onAdd, onEdit }) => {
-  const { deleteExperience } = usePortfolio();
-
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this experience entry?')) {
-      const result = await deleteExperience(id);
-      if (result.success) {
-        toast.success('Experience entry deleted successfully');
-      } else {
-        toast.error(result.message);
-      }
-    }
-  };
-
-  return (
-    <div className="tab-content">
-      <div className="tab-header">
-        <h2>Experience Management</h2>
-        <button onClick={onAdd} className="btn btn-primary">
-          <FaPlus /> Add Experience
-        </button>
-      </div>
-
-      <div className="data-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Company</th>
-              <th>Position</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-              <th>Description</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((exp) => (
-              <tr key={exp._id}>
-                <td>{exp.company}</td>
-                <td>{exp.position}</td>
-                <td>{exp.startDate}</td>
-                <td>{exp.endDate}</td>
-                <td>{exp.description}</td>
-                <td>
-                  <div className="action-buttons">
-                    <button 
-                      onClick={() => onEdit(exp)}
-                      className="btn-icon btn-edit"
-                    >
-                      <FaEdit />
-                    </button>
-                    <button 
-                      onClick={() => handleDelete(exp._id)}
-                      className="btn-icon btn-delete"
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {data.length === 0 && (
-          <div className="empty-state">
-            <p>No experience entries added yet. Click "Add Experience" to get started.</p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-// Education Tab Component
-const EducationTab = ({ data, onAdd, onEdit }) => {
-  const { deleteEducation } = usePortfolio();
-
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this education entry?')) {
-      const result = await deleteEducation(id);
-      if (result.success) {
-        toast.success('Education entry deleted successfully');
-      } else {
-        toast.error(result.message);
-      }
-    }
-  };
-
-  return (
-    <div className="tab-content">
-      <div className="tab-header">
-        <h2>Education Management</h2>
-        <button onClick={onAdd} className="btn btn-primary">
-          <FaPlus /> Add Education
-        </button>
-      </div>
-
-      <div className="data-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Institution</th>
-              <th>Degree</th>
-              <th>Field</th>
-              <th>Start Year</th>
-              <th>End Year</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((edu) => (
-              <tr key={edu._id}>
-                <td>{edu.institution}</td>
-                <td>{edu.degree}</td>
-                <td>{edu.fieldOfStudy}</td>
-                <td>{edu.startYear}</td>
-                <td>{edu.endYear}</td>
-                <td>
-                  <div className="action-buttons">
-                    <button 
-                      onClick={() => onEdit(edu)}
-                      className="btn-icon btn-edit"
-                    >
-                      <FaEdit />
-                    </button>
-                    <button 
-                      onClick={() => handleDelete(edu._id)}
-                      className="btn-icon btn-delete"
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {data.length === 0 && (
-          <div className="empty-state">
-            <p>No education entries added yet. Click "Add Education" to get started.</p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-// Certificates Tab Component
-const CertificatesTab = ({ data, onAdd, onEdit }) => {
-  const { deleteCertificate } = usePortfolio();
-
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this certificate?')) {
-      const result = await deleteCertificate(id);
-      if (result.success) {
-        toast.success('Certificate deleted successfully');
-      } else {
-        toast.error(result.message);
-      }
-    }
-  };
-
-  return (
-    <div className="tab-content">
-      <div className="tab-header">
-        <h2>Certificates Management</h2>
-        <button onClick={onAdd} className="btn btn-primary">
-          <FaPlus /> Add Certificate
-        </button>
-      </div>
-
-      <div className="data-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Issuer</th>
-              <th>Date</th>
-              <th>Credential ID</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((cert) => (
-              <tr key={cert._id}>
-                <td>{cert.name}</td>
-                <td>{cert.issuer}</td>
-                <td>{cert.date}</td>
-                <td>{cert.credentialId}</td>
-                <td>
-                  <div className="action-buttons">
-                    <button 
-                      onClick={() => onEdit(cert)}
-                      className="btn-icon btn-edit"
-                    >
-                      <FaEdit />
-                    </button>
-                    <button 
-                      onClick={() => handleDelete(cert._id)}
-                      className="btn-icon btn-delete"
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {data.length === 0 && (
-          <div className="empty-state">
-            <p>No certificates added yet. Click "Add Certificate" to get started.</p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-// Messages Tab Component
-const MessagesTab = ({ data, onRefresh }) => {
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this message?')) {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/portfolio/messages/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
-        const result = await response.json();
-        if (result.success) {
-          toast.success('Message deleted successfully');
-          onRefresh();
-        } else {
-          toast.error(result.message);
-        }
-      } catch (error) {
-        toast.error('Error deleting message');
-      }
-    }
-  };
-
-  return (
-    <div className="tab-content">
-      <div className="tab-header">
-        <h2>Messages Management</h2>
-        <button onClick={onRefresh} className="btn btn-primary">
-          Refresh Messages
-        </button>
-      </div>
-
-      <div className="data-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Message</th>
-              <th>Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((message) => (
-              <tr key={message._id}>
-                <td>{message.name}</td>
-                <td>{message.email}</td>
-                <td>{message.message}</td>
-                <td>{new Date(message.createdAt).toLocaleDateString()}</td>
-                <td>
-                  <div className="action-buttons">
-                    <button 
-                      onClick={() => handleDelete(message._id)}
-                      className="btn-icon btn-delete"
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {data.length === 0 && (
-          <div className="empty-state">
-            <p>No messages received yet.</p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-// Languages Tab Component
-const LanguagesTab = ({ data, onAdd, onEdit }) => {
-  const { deleteLanguage } = usePortfolio();
-
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this language?')) {
-      const result = await deleteLanguage(id);
-      if (result.success) {
-        toast.success('Language deleted successfully');
-      } else {
-        toast.error(result.message);
-      }
-    }
-  };
-
-  return (
-    <div className="tab-content">
-      <div className="tab-header">
-        <h2>Languages Management</h2>
-        <button onClick={onAdd} className="btn btn-primary">
-          <FaPlus /> Add Language
-        </button>
-      </div>
-
-      <div className="data-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Language</th>
-              <th>Proficiency</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((lang) => (
-              <tr key={lang._id}>
-                <td>{lang.name}</td>
-                <td>{lang.proficiency}</td>
-                <td>
-                  <div className="action-buttons">
-                    <button 
-                      onClick={() => onEdit(lang)}
-                      className="btn-icon btn-edit"
-                    >
-                      <FaEdit />
-                    </button>
-                    <button 
-                      onClick={() => handleDelete(lang._id)}
-                      className="btn-icon btn-delete"
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {data.length === 0 && (
-          <div className="empty-state">
-            <p>No languages added yet. Click "Add Language" to get started.</p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-export default AdminDashboard;
-
-const validateForm = (data) => {
-  const errors = {};
-  
-  if (!data.name?.trim()) errors.name = 'Name is required';
-  if (!data.email?.trim()) errors.email = 'Email is required';
-  if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-    errors.email = 'Invalid email format';
-  }
-  
-  return Object.keys(errors).length === 0 ? null : errors;
-};
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-
-  const errors = validateForm(formData);
-  if (errors) {
-    Object.values(errors).forEach(error => toast.error(error));
-    setLoading(false);
-    return;
-  }
-
-  const submitData = new FormData();
-  
-  // Handle profile image separately
-  if (formData.profileImage && typeof formData.profileImage === 'object') {
-    submitData.append('profileImage', formData.profileImage);
-  }
-
-  // Remove profileImage from personalInfo data
-  const personalInfoData = { ...formData };
-  delete personalInfoData.profileImage;
-
-  // Append personal info as JSON string
-  submitData.append('personalInfo', JSON.stringify(personalInfoData));
-
-  const result = await updatePersonalInfo(submitData);
-  
-  if (result.success) {
-    onSave();
-  } else {
-    toast.error(result.message);
-  }
-  
-  setLoading(false);
+PersonalInfoTab.propTypes = {
+  data: PropTypes.object,
+  onSave: PropTypes.func.isRequired
 };
