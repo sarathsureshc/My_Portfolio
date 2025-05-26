@@ -153,13 +153,20 @@ export const PortfolioProvider = ({ children }) => {
 
   const deleteProject = async (id) => {
     try {
-      const response = await axios.delete(`${API_URL}/portfolio/projects/${id}`);
+      const response = await axios.delete(`${API_URL}/portfolio/projects/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
       setPortfolioData(prev => ({
         ...prev,
-        projects: response.data.data
+        projects: prev.projects.filter(project => project._id !== id)
       }));
       return { success: true };
     } catch (error) {
+      console.error('Error deleting project:', error);
       return { 
         success: false, 
         message: error.response?.data?.message || 'Failed to delete project' 
@@ -201,13 +208,20 @@ export const PortfolioProvider = ({ children }) => {
 
   const deleteExperience = async (id) => {
     try {
-      const response = await axios.delete(`${API_URL}/portfolio/experience/${id}`);
+      const response = await axios.delete(`${API_URL}/portfolio/experience/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
       setPortfolioData(prev => ({
         ...prev,
-        experience: response.data.data
+        experience: prev.experience.filter(exp => exp._id !== id)
       }));
       return { success: true };
     } catch (error) {
+      console.error('Error deleting experience:', error);
       return { 
         success: false, 
         message: error.response?.data?.message || 'Failed to delete experience' 
@@ -249,13 +263,20 @@ export const PortfolioProvider = ({ children }) => {
 
   const deleteEducation = async (id) => {
     try {
-      const response = await axios.delete(`${API_URL}/portfolio/education/${id}`);
+      const response = await axios.delete(`${API_URL}/portfolio/education/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
       setPortfolioData(prev => ({
         ...prev,
-        education: response.data.data
+        education: prev.education.filter(edu => edu._id !== id)
       }));
       return { success: true };
     } catch (error) {
+      console.error('Error deleting education:', error);
       return { 
         success: false, 
         message: error.response?.data?.message || 'Failed to delete education' 
@@ -305,13 +326,20 @@ export const PortfolioProvider = ({ children }) => {
 
   const deleteCertificate = async (id) => {
     try {
-      const response = await axios.delete(`${API_URL}/portfolio/certificates/${id}`);
+      const response = await axios.delete(`${API_URL}/portfolio/certificates/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
       setPortfolioData(prev => ({
         ...prev,
-        certificates: response.data.data
+        certificates: prev.certificates.filter(cert => cert._id !== id)
       }));
       return { success: true };
     } catch (error) {
+      console.error('Error deleting certificate:', error);
       return { 
         success: false, 
         message: error.response?.data?.message || 'Failed to delete certificate' 
@@ -353,13 +381,20 @@ export const PortfolioProvider = ({ children }) => {
 
   const deleteLanguage = async (id) => {
     try {
-      const response = await axios.delete(`${API_URL}/portfolio/languages/${id}`);
+      const response = await axios.delete(`${API_URL}/portfolio/languages/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
       setPortfolioData(prev => ({
         ...prev,
-        languages: response.data.data
+        languages: prev.languages.filter(lang => lang._id !== id)
       }));
       return { success: true };
     } catch (error) {
+      console.error('Error deleting language:', error);
       return { 
         success: false, 
         message: error.response?.data?.message || 'Failed to delete language' 
