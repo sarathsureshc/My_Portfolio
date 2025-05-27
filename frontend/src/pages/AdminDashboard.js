@@ -227,18 +227,81 @@ const GenericTab = ({ title, data, onAdd, onEdit, onDelete }) => {
 
 // Messages Tab Component
 const MessagesTab = ({ data, onRefresh }) => {
+  const [filterStatus, setFilterStatus] = useState('all'); // 'all', 'read', 'unread'
+  const [sortOrder, setSortOrder] = useState('desc'); // 'asc', 'desc'
+
+  const filteredMessages = data.filter(message => {
+    if (filterStatus === 'all') return true;
+    return filterStatus === 'read' ? message.isRead : !message.isRead;
+  });
+
+  const sortedMessages = [...filteredMessages].sort((a, b) => {
+    const dateA = new Date(a.createdAt);
+    const dateB = new Date(b.createdAt);
+    return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+  });
+
+  const handleMarkAsRead = async (messageId) => {
+    try {
+      const response = await fetch(`${API_URL}/portfolio/messages/${messageId}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ isRead: true })
+      });
+      if (response.ok) {
+        onRefresh(); // Refresh messages after updating
+        toast.success('Message marked as read');
+      }
+    } catch (error) {
+      console.error('Error marking message as read:', error);
+      toast.error('Failed to update message status');
+    }
+  };
+
   return (
     <div className="tab-content">
       <div className="tab-header">
         <h2>Messages</h2>
-        <button onClick={onRefresh} className="btn btn-secondary">
-          Refresh
-        </button>
+        <div className="message-controls">
+          <select 
+            value={filterStatus} 
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="filter-select"
+          >
+            <option value="all">All Messages</option>
+            <option value="read">Read</option>
+            <option value="unread">Unread</option>
+          </select>
+          <select 
+            value={sortOrder} 
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="sort-select"
+          >
+            <option value="desc">Newest First</option>
+            <option value="asc">Oldest First</option>
+          </select>
+          <button onClick={onRefresh} className="btn btn-secondary">
+            <FaSync /> Refresh
+          </button>
+        </div>
       </div>
       <div className="messages-list">
-        {data.map((message) => (
-          <div key={message._id} className="message-card">
-            <h3>{message.subject}</h3>
+        {sortedMessages.map((message) => (
+          <div key={message._id} className={`message-card ${message.isRead ? 'read' : 'unread'}`}>
+            <div className="message-header">
+              <h3>{message.subject}</h3>
+              {!message.isRead && (
+                <button 
+                  onClick={() => handleMarkAsRead(message._id)} 
+                  className="btn btn-small"
+                >
+                  Mark as Read
+                </button>
+              )}
+            </div>
             <p>{message.message}</p>
             <div className="message-meta">
               <span>{message.name}</span>
