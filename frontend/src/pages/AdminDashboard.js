@@ -4,7 +4,7 @@ import {
   FaUser, FaCode, FaProjectDiagram, FaBriefcase, 
   FaGraduationCap, FaCertificate, FaLanguage, 
   FaEnvelope, FaSignOutAlt, FaPlus, FaEdit, 
-  FaTrash, FaSave, FaTimes 
+  FaTrash, FaSave, FaTimes, FaSync 
 } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
@@ -227,9 +227,10 @@ const GenericTab = ({ title, data, onAdd, onEdit, onDelete }) => {
 
 // Messages Tab Component
 const MessagesTab = ({ data, onRefresh }) => {
-  const [filterStatus, setFilterStatus] = useState('all'); // 'all', 'read', 'unread'
-  const [sortOrder, setSortOrder] = useState('desc'); // 'asc', 'desc'
-
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [sortOrder, setSortOrder] = useState('desc');
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+  
   const filteredMessages = data.filter(message => {
     if (filterStatus === 'all') return true;
     return filterStatus === 'read' ? message.isRead : !message.isRead;
