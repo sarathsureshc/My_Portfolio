@@ -12,6 +12,12 @@
   width: 100%;
 }
 
+.about-title {
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #333;
+}
+
 .about-hero {
   text-align: center;
   margin-bottom: 3rem;
