@@ -63,11 +63,14 @@
 
 .skills-list {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 1.25rem;
 }
 
 .skill-item {
+  flex: 1 1 calc(50% - 1.25rem);
+  min-width: 200px;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -200,7 +203,8 @@
   }
 
   .skill-item {
-    padding: 0.75rem;
+    flex: 1 1 100%;
+    min-width: unset;
   }
 
   .skill-icon {
